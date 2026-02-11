@@ -80,3 +80,19 @@ variable "grant_nops_resource_manager_role_at_org" {
   type        = bool
   default     = true
 }
+
+# ------------------------------------------------------------------------------
+# Organization-level roles for Automation Agent (browser, support)
+# ------------------------------------------------------------------------------
+
+variable "grant_nops_org_browser" {
+  description = "Grant the nOps service account roles/browser at the organization level (required for autonomous commitment management)."
+  type        = bool
+  default     = true
+}
+
+variable "grant_nops_org_tech_support_editor" {
+  description = "Grant the nOps service account roles/cloudsupport.techSupportEditor at the organization level. Enable only if you have a paid support plan (Standard/Enhanced/Premium) and want support ticket creation."
+  type        = bool
+  default     = false
+}

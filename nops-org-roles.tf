@@ -1,0 +1,22 @@
+# Organization-level roles for the nOps Automation Agent (Service Account).
+# These are required for autonomous commitment management and optional support features.
+
+# roles/browser: Required for nOps to browse and discover resources at org level.
+resource "google_organization_iam_member" "nops_browser" {
+  count = var.grant_nops_org_browser ? 1 : 0
+
+  org_id = var.organization_id
+  role   = "roles/browser"
+  member = "serviceAccount:${var.nops_service_account_email}"
+}
+
+# roles/cloudsupport.techSupportEditor: Optional; enable only if you have a paid
+# support plan (Standard/Enhanced/Premium) and want the service account to create
+# support tickets.
+resource "google_organization_iam_member" "nops_tech_support_editor" {
+  count = var.grant_nops_org_tech_support_editor ? 1 : 0
+
+  org_id = var.organization_id
+  role   = "roles/cloudsupport.techSupportEditor"
+  member = "serviceAccount:${var.nops_service_account_email}"
+}
