@@ -34,7 +34,14 @@ variable "apis_to_enable" {
   default = [
     "cloudbilling.googleapis.com",
     "iam.googleapis.com",
-    "cloudresourcemanager.googleapis.com"
+    "cloudresourcemanager.googleapis.com",
+    # APIs for commitment purchasing and CUD management
+    "compute.googleapis.com",
+    "cloudcommerceconsumerprocurement.googleapis.com",
+    "cloudasset.googleapis.com",
+    "cloudquotas.googleapis.com",
+    "serviceusage.googleapis.com",
+    "recommender.googleapis.com"
   ]
 }
 
