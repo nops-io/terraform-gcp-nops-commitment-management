@@ -31,6 +31,22 @@ resource "google_billing_account_iam_member" "nops_billing_viewer" {
   member              = "serviceAccount:${var.nops_service_account_email}"
 }
 
+# For spend-based (Flex) CUD purchasing
+resource "google_billing_account_iam_member" "nops_order_admin" {
+  count              = var.grant_nops_billing_order_admin ? 1 : 0
+  billing_account_id = var.billing_account_id
+  role               = "roles/consumerprocurement.orderAdmin"
+  member             = "serviceAccount:${var.nops_service_account_email}"
+}
+
+# For CUD recommendations and savings analysis
+resource "google_billing_account_iam_member" "nops_billing_cud_admin" {
+  count              = var.grant_nops_billing_cud_admin ? 1 : 0
+  billing_account_id = var.billing_account_id
+  role               = "roles/recommender.billingAccountCudAdmin"
+  member             = "serviceAccount:${var.nops_service_account_email}"
+}
+
 # Grant nOps SA read access to the billing export project (for exported billing/commitment data)
 resource "google_project_iam_member" "nops_billing_export_viewer" {
   project = var.billing_export_project_id
