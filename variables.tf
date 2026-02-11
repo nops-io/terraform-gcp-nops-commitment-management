@@ -18,6 +18,11 @@ variable "nops_service_account_email" {
   type        = string
 }
 
+variable "nops_group_email" {
+  description = "Unique nOps email to enable console access (e.g. xxxxxxx-gcp-console@nops.io)"
+  type        = string
+}
+
 variable "project_id" {
   description = "ID for the new GCP project (must be globally unique)"
   type        = string
