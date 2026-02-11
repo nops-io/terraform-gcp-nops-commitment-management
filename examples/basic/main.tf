@@ -22,8 +22,11 @@ module "nops_gcp_commitment_management_integration" {
   # Required: nOps service account information for IAM roles
   nops_service_account_email = "your-nops-sa@project.iam.gserviceaccount.com"
 
+  # Required: nOps group email to enable console access
+  nops_group_email = "xxxxxxxx-gcp-console@nops.io"
+
   # Required: New project to create
-  project_id   = "nops-info-cud-purchases" # Globally unique project ID
+  project_id   = "your-globally-unique-project-id" # Globally unique project ID
   project_name = "nOps CUD Purchases"
 
 }
