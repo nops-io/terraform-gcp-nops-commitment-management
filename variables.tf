@@ -116,13 +116,36 @@ variable "grant_nops_org_tech_support_editor" {
 }
 
 variable "nops_group_email" {
-  description = "nOps group email for support ticket creation (e.g. gcp-cm-XXXX@nops.io, from the nOps UI). Leave empty to skip granting the group org-level support role."
+  description = "nOps group email (e.g. gcp-cm-XXXX@nops.io, from the nOps UI). Required for human manager access: billing/CUD visibility and optional org-level support role."
   type        = string
-  default     = ""
 }
 
 variable "grant_nops_group_tech_support_editor" {
   description = "Grant the nOps group (nops_group_email) roles/cloudsupport.techSupportEditor at the organization level. Paid support plans only."
   type        = bool
   default     = false
+}
+
+variable "grant_nops_group_billing_viewer" {
+  description = "Grant the nOps group (nops_group_email) roles/billing.viewer on the billing account (required for human managers to view billing and CUD information)."
+  type        = bool
+  default     = true
+}
+
+variable "grant_nops_group_billing_cud_viewer" {
+  description = "Grant the nOps group (nops_group_email) roles/recommender.billingAccountCudViewer on the billing account (required for human managers to view CUD recommendations)."
+  type        = bool
+  default     = true
+}
+
+variable "grant_nops_group_project_compute_viewer" {
+  description = "Grant the nOps group (nops_group_email) roles/compute.viewer on the CUD project (required for human managers to view VMs)."
+  type        = bool
+  default     = true
+}
+
+variable "grant_nops_group_project_resource_manager" {
+  description = "Grant the nOps group (nops_group_email) the custom nOpsResourceManager role on the CUD project (required for human managers to manage commitments manually). Requires create_nops_resource_manager_role to be true."
+  type        = bool
+  default     = true
 }

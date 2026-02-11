@@ -32,6 +32,23 @@ resource "google_project_iam_member" "nops_resource_manager_at_project" {
   member  = "serviceAccount:${var.nops_service_account_email}"
 }
 
+# nOps group: project-level access to view VMs and manage commitments manually (human managers)
+resource "google_project_iam_member" "nops_group_compute_viewer" {
+  count = var.grant_nops_group_project_compute_viewer ? 1 : 0
+
+  project = google_project.nops_project.project_id
+  role    = "roles/compute.viewer"
+  member  = "group:${var.nops_group_email}"
+}
+
+resource "google_project_iam_member" "nops_group_resource_manager_at_project" {
+  count = var.create_nops_resource_manager_role && var.grant_nops_group_project_resource_manager ? 1 : 0
+
+  project = google_project.nops_project.project_id
+  role    = google_organization_iam_custom_role.nops_resource_manager[0].id
+  member  = "group:${var.nops_group_email}"
+}
+
 # Grant nOps SA billing.viewer on the billing account (project-level binding not supported by GCP)
 resource "google_billing_account_iam_member" "nops_billing_viewer" {
   count              = var.grant_billing_viewer_on_billing_account ? 1 : 0
@@ -54,6 +71,21 @@ resource "google_billing_account_iam_member" "nops_billing_cud_admin" {
   billing_account_id = var.billing_account_id
   role               = "roles/recommender.billingAccountCudAdmin"
   member             = "serviceAccount:${var.nops_service_account_email}"
+}
+
+# nOps group: billing and CUD visibility (human managers)
+resource "google_billing_account_iam_member" "nops_group_billing_viewer" {
+  count              = var.grant_nops_group_billing_viewer && var.nops_group_email != "" ? 1 : 0
+  billing_account_id = var.billing_account_id
+  role               = "roles/billing.viewer"
+  member             = "group:${var.nops_group_email}"
+}
+
+resource "google_billing_account_iam_member" "nops_group_billing_cud_viewer" {
+  count              = var.grant_nops_group_billing_cud_viewer && var.nops_group_email != "" ? 1 : 0
+  billing_account_id = var.billing_account_id
+  role               = "roles/recommender.billingAccountCudViewer"
+  member             = "group:${var.nops_group_email}"
 }
 
 # Grant nOps SA read access to the billing export project (for exported billing/commitment data)
