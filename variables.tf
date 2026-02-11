@@ -58,3 +58,25 @@ variable "nops_billing_export_role" {
   type        = string
   default     = "roles/viewer"
 }
+
+# ------------------------------------------------------------------------------
+# nOps Resource Manager role (organization-level)
+# ------------------------------------------------------------------------------
+
+variable "create_nops_resource_manager_role" {
+  description = "Create the nOps Resource Manager custom role at the organization level (replaces gcloud iam roles create). Set to false if the role already exists."
+  type        = bool
+  default     = true
+}
+
+variable "nops_resource_manager_role_id" {
+  description = "ID for the custom organization role (e.g. nOpsResourceManager). Must be unique within the organization."
+  type        = string
+  default     = "nOpsResourceManager"
+}
+
+variable "grant_nops_resource_manager_role_at_org" {
+  description = "Grant the nOps Resource Manager custom role to the nOps service account at the organization level. Requires create_nops_resource_manager_role to be true."
+  type        = bool
+  default     = true
+}
