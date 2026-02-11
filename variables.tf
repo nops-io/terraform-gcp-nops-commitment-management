@@ -93,6 +93,12 @@ variable "grant_nops_resource_manager_role_at_org" {
   default     = true
 }
 
+variable "grant_nops_resource_manager_role_at_project" {
+  description = "Grant the nOps Resource Manager custom role to the nOps service account on the dedicated CUD project (for resource-based commitment purchasing via compute.commitments.create). Requires create_nops_resource_manager_role to be true."
+  type        = bool
+  default     = true
+}
+
 # ------------------------------------------------------------------------------
 # Organization-level roles for Automation Agent (browser, support)
 # ------------------------------------------------------------------------------

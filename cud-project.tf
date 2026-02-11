@@ -15,12 +15,21 @@ resource "google_project_service" "apis" {
   disable_dependent_services = false
 }
 
-# Grant nOps service account IAM roles on the new project
+# Grant nOps service account IAM roles on the new project (e.g. roles/compute.viewer, roles/cloudasset.viewer)
 resource "google_project_iam_member" "nops_sa_roles" {
   for_each = toset(var.nops_project_roles)
   project  = google_project.nops_project.project_id
   role     = each.value
   member   = "serviceAccount:${var.nops_service_account_email}"
+}
+
+# Grant the custom nOpsResourceManager role on the CUD project (compute.commitments.create for resource-based CUD purchasing)
+resource "google_project_iam_member" "nops_resource_manager_at_project" {
+  count = var.create_nops_resource_manager_role && var.grant_nops_resource_manager_role_at_project ? 1 : 0
+
+  project = google_project.nops_project.project_id
+  role    = google_organization_iam_custom_role.nops_resource_manager[0].id
+  member  = "serviceAccount:${var.nops_service_account_email}"
 }
 
 # Grant nOps SA billing.viewer on the billing account (project-level binding not supported by GCP)
