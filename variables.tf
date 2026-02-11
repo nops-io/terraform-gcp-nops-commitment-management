@@ -18,11 +18,6 @@ variable "nops_service_account_email" {
   type        = string
 }
 
-variable "nops_group_email" {
-  description = "Unique nOps email to enable console access (e.g. xxxxxxx-gcp-console@nops.io)"
-  type        = string
-}
-
 variable "project_id" {
   description = "ID for the new GCP project (must be globally unique)"
   type        = string
@@ -116,6 +111,18 @@ variable "grant_nops_org_browser" {
 
 variable "grant_nops_org_tech_support_editor" {
   description = "Grant the nOps service account roles/cloudsupport.techSupportEditor at the organization level. Enable only if you have a paid support plan (Standard/Enhanced/Premium) and want support ticket creation."
+  type        = bool
+  default     = false
+}
+
+variable "nops_group_email" {
+  description = "nOps group email for support ticket creation (e.g. gcp-cm-XXXX@nops.io, from the nOps UI). Leave empty to skip granting the group org-level support role."
+  type        = string
+  default     = ""
+}
+
+variable "grant_nops_group_tech_support_editor" {
+  description = "Grant the nOps group (nops_group_email) roles/cloudsupport.techSupportEditor at the organization level. Paid support plans only."
   type        = bool
   default     = false
 }

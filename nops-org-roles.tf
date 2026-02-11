@@ -20,3 +20,13 @@ resource "google_organization_iam_member" "nops_tech_support_editor" {
   role   = "roles/cloudsupport.techSupportEditor"
   member = "serviceAccount:${var.nops_service_account_email}"
 }
+
+# roles/cloudsupport.techSupportEditor for nOps group (use the group email shown in nOps UI, e.g. gcp-cm-XXXX@nops.io).
+# Paid support plans only.
+resource "google_organization_iam_member" "nops_group_tech_support_editor" {
+  count = var.grant_nops_group_tech_support_editor && var.nops_group_email != "" ? 1 : 0
+
+  org_id = var.organization_id
+  role   = "roles/cloudsupport.techSupportEditor"
+  member = "group:${var.nops_group_email}"
+}

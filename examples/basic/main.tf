@@ -29,6 +29,10 @@ module "nops_gcp_commitment_management_integration" {
   project_id   = "your-globally-unique-project-id" # Globally unique project ID
   project_name = "nOps CUD Purchases"
 
+  # Optional: Grant the nOps group roles/cloudsupport.techSupportEditor at the organization level
+  # Paid support plans only.
+  # grant_nops_group_tech_support_editor = true
+
 }
 
 output "project_id" {
