@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.1] - 2026-02-12
+
+### Fixed
+
+- **nops-org-roles.tf**: Use `group:` prefix for `nops_group_email` in `roles/browser` grant instead of `serviceAccount:`. The nOps group email is a Google group and must appear as `group:...` per GCP IAM member types.
+
 ## [1.0.0] - 2026-02-11
 
 ### Added

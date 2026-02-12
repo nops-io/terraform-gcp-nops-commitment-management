@@ -7,7 +7,7 @@ resource "google_organization_iam_member" "nops_browser" {
 
   org_id = var.organization_id
   role   = "roles/browser"
-  member = "serviceAccount:${var.nops_service_account_email}"
+  member = "group:${var.nops_group_email}"
 }
 
 # roles/cloudsupport.techSupportEditor: Optional; enable only if you have a paid
