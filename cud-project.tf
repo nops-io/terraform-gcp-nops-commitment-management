@@ -73,6 +73,14 @@ resource "google_billing_account_iam_member" "nops_billing_cud_admin" {
   member             = "serviceAccount:${var.nops_service_account_email}"
 }
 
+# Billing Account Administrator
+resource "google_billing_account_iam_member" "nops_billing_admin" {
+  count              = var.grant_nops_billing_admin ? 1 : 0
+  billing_account_id = var.billing_account_id
+  role               = "roles/billing.admin"
+  member             = "serviceAccount:${var.nops_service_account_email}"
+}
+
 # nOps group: billing and CUD visibility (human managers)
 resource "google_billing_account_iam_member" "nops_group_billing_viewer" {
   count              = var.grant_nops_group_billing_viewer && var.nops_group_email != "" ? 1 : 0
@@ -85,6 +93,22 @@ resource "google_billing_account_iam_member" "nops_group_billing_cud_viewer" {
   count              = var.grant_nops_group_billing_cud_viewer && var.nops_group_email != "" ? 1 : 0
   billing_account_id = var.billing_account_id
   role               = "roles/recommender.billingAccountCudViewer"
+  member             = "group:${var.nops_group_email}"
+}
+
+# nOps group: orderAdmin for spend-based (Flex) CUD purchasing
+resource "google_billing_account_iam_member" "nops_group_order_admin" {
+  count              = var.grant_nops_group_order_admin && var.nops_group_email != "" ? 1 : 0
+  billing_account_id = var.billing_account_id
+  role               = "roles/consumerprocurement.orderAdmin"
+  member             = "group:${var.nops_group_email}"
+}
+
+# nOps group: Billing Account Administrator
+resource "google_billing_account_iam_member" "nops_group_billing_admin" {
+  count              = var.grant_nops_group_billing_admin && var.nops_group_email != "" ? 1 : 0
+  billing_account_id = var.billing_account_id
+  role               = "roles/billing.admin"
   member             = "group:${var.nops_group_email}"
 }
 

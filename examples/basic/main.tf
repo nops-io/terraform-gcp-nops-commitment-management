@@ -36,9 +36,9 @@ module "nops_gcp_commitment_management_integration" {
 }
 
 output "project_id" {
-  value = module.nops_gcp_integration.project_id
+  value = module.nops_gcp_commitment_management_integration.project_id
 }
 
 output "project_number" {
-  value = module.nops_gcp_integration.project_number
+  value = module.nops_gcp_commitment_management_integration.project_number
 }

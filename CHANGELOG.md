@@ -2,6 +2,32 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.5] - 2026-02-24
+
+### Added
+
+- **Billing account IAM**: Restored optional grant for the nOps service account—`roles/billing.admin` (Billing Account Administrator) on the billing account. Controlled by `grant_nops_billing_admin` (default `true`).
+- **Billing account IAM**: Restored optional grant for the nOps group—`roles/billing.admin` (Billing Account Administrator) on the billing account. Controlled by `grant_nops_group_billing_admin` (default `true`).
+
+## [1.0.4] - 2026-02-24
+
+### Changed
+
+- **Billing account IAM**: Use `roles/consumerprocurement.orderAdmin` only (for both nOps service account and nOps group). Removed `roles/billing.admin` (Billing Account Administrator) grants and variables `grant_nops_billing_admin` / `grant_nops_group_billing_admin`.
+
+## [1.0.3] - 2026-02-24
+
+### Added
+
+- **Billing account IAM**: Optional grant for the nOps service account—`roles/billing.admin` (Billing Account Administrator) on the billing account. Controlled by `grant_nops_billing_admin` (default `true`).
+- **Billing account IAM**: Optional grant for the nOps group—`roles/billing.admin` (Billing Account Administrator) on the billing account. Controlled by `grant_nops_group_billing_admin` (default `true`). *(Removed in 1.0.4 in favor of orderAdmin.)*
+
+## [1.0.2] - 2026-02-24
+
+### Added
+
+- **Billing account IAM**: Optional grant for the nOps group—`roles/consumerprocurement.orderAdmin` on the billing account (for spend-based/Flex CUD purchasing by human managers). Controlled by `grant_nops_group_order_admin` (default `true`).
+
 ## [1.0.1] - 2026-02-12
 
 ### Fixed

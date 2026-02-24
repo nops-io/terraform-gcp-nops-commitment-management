@@ -72,6 +72,12 @@ variable "grant_nops_billing_cud_admin" {
   default     = true
 }
 
+variable "grant_nops_billing_admin" {
+  description = "Grant the nOps service account roles/billing.admin (Billing Account Administrator) on the billing account."
+  type        = bool
+  default     = true
+}
+
 variable "nops_billing_export_role" {
   description = "IAM role to grant the nOps service account on the billing export project (for reading exported billing data). roles/billing.viewer is not valid on projects; use e.g. roles/viewer or roles/bigquery.dataViewer."
   type        = string
@@ -141,6 +147,18 @@ variable "grant_nops_group_billing_viewer" {
 
 variable "grant_nops_group_billing_cud_viewer" {
   description = "Grant the nOps group (nops_group_email) roles/recommender.billingAccountCudViewer on the billing account (required for human managers to view CUD recommendations)."
+  type        = bool
+  default     = true
+}
+
+variable "grant_nops_group_order_admin" {
+  description = "Grant the nOps group (nops_group_email) roles/consumerprocurement.orderAdmin on the billing account (for spend-based/Flex CUD purchasing by human managers)."
+  type        = bool
+  default     = true
+}
+
+variable "grant_nops_group_billing_admin" {
+  description = "Grant the nOps group (nops_group_email) roles/billing.admin (Billing Account Administrator) on the billing account."
   type        = bool
   default     = true
 }
