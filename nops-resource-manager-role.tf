@@ -2,25 +2,24 @@
 # commitments and quotas
 
 locals {
+  nops_resource_manager_role_name = var.create_nops_resource_manager_role ? google_organization_iam_custom_role.nops_resource_manager[0].id : "organizations/${var.organization_id}/roles/${var.nops_resource_manager_role_id}"
+
   nops_resource_manager_permissions = [
-    # Compute Lifecycle (Action Layer)
+    "cloudasset.assets.exportResource",
+    "cloudquotas.quotas.get",
+    "cloudquotas.quotas.update",
     "compute.commitments.create",
-    "compute.commitments.update",
-    "compute.commitments.updateReservations",
     "compute.commitments.get",
     "compute.commitments.list",
+    "compute.commitments.update",
+    "compute.commitments.updateReservations",
     "compute.regionOperations.get",
-    # Reliability (Auto-Fix Quotas)
+    "monitoring.timeSeries.list",
     "serviceusage.quotas.get",
     "serviceusage.quotas.update",
     "serviceusage.services.get",
     "serviceusage.services.list",
-    "cloudquotas.quotas.get",
-    "cloudquotas.quotas.update",
-    # Asset Export (Bulk Visibility)
-    "cloudasset.assets.exportResource",
-    # Monitoring
-    "monitoring.timeSeries.list",
+    "serviceusage.services.use",
   ]
 }
 
@@ -37,9 +36,7 @@ resource "google_organization_iam_custom_role" "nops_resource_manager" {
 
 # Grant the custom role to the nOps service account at the organization level.
 resource "google_organization_iam_member" "nops_resource_manager_role" {
-  count = var.create_nops_resource_manager_role && var.grant_nops_resource_manager_role_at_org ? 1 : 0
-
   org_id = var.organization_id
-  role   = google_organization_iam_custom_role.nops_resource_manager[0].id
+  role   = local.nops_resource_manager_role_name
   member = "serviceAccount:${var.nops_service_account_email}"
 }

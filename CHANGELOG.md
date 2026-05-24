@@ -2,6 +2,43 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.0.0] - 2026-05-23
+
+### ⚠️ BREAKING CHANGES
+
+- **No longer creates a GCP project** — Provide an existing CUD purchase project via `cud_purchase_project_id`. Removed `project_name`, `project_id`, `project_number`, and `project_name` outputs.
+- **Removed `billing_export_project_id`** — Billing export project IAM belongs in `terraform-gcp-nops-integration`; removed `nops_billing_export_role` and related project IAM.
+- **Renamed `nops_group_email` → `nops_support_email`** — Update all module invocations.
+- **Renamed input `project_id` → `cud_purchase_project_id`** — Required project ID for the existing CUD purchase project.
+- **Removed optional IAM grant variables** — All IAM bindings are always applied except `roles/cloudsupport.techSupportEditor` (paid support plans only). Removed `grant_*` toggles for billing account, organization, CUD project, and nOps Resource Manager grants.
+- **Removed `apis_to_enable` and `nops_project_roles`** — APIs are defined explicitly in `apis.tf`; CUD project IAM is fixed to the documented role set.
+- **Removed `roles/billing.admin`** — Billing account IAM now grants only `roles/billing.viewer`, `roles/consumerprocurement.orderAdmin`, and recommender billing account CUD roles.
+
+### Added
+
+- **`apis.tf`** — Explicit API enablement for Compute Engine, Cloud Commerce Consumer Procurement, Cloud Asset, Cloud Quotas, Service Usage, and Recommender on the CUD purchase project.
+- **`billing-iam.tf`** — Billing account IAM for the nOps service account and nOps Support group.
+- **`org-iam.tf`** — Organization-level IAM (replaces `nops-org-roles.tf`).
+- **Organization IAM for service account** — `roles/cloudasset.viewer`, `roles/browser`, `roles/recommender.viewer`, `roles/cloudsql.viewer`, `roles/run.viewer`, `roles/recommender.computeViewer`.
+- **Organization IAM for nOps Support** — `roles/browser`, `roles/compute.viewer`.
+- **Outputs** — `cud_purchase_project_id`, `enabled_apis_summary`.
+- **Variable** — `nops_resource_manager_role_id` (required).
+- **Variable** — `disable_apis_on_destroy`.
+
+### Changed
+
+- **Module structure** — IAM split across `apis.tf`, `billing-iam.tf`, `cud-project.tf`, `org-iam.tf`, and `nops-resource-manager-role.tf`.
+- **CUD project IAM** — Service account and nOps Support each receive `roles/compute.viewer` and the nOps Resource Manager custom role.
+- **Billing account IAM** — Fixed role set per principal (see README); no `roles/billing.admin`.
+- **nOps Resource Manager custom role** — Updated permissions list (includes `serviceusage.services.use`).
+- **README** — API, organization, billing account, and CUD project IAM tables; updated usage example and inputs/outputs.
+
+### Removed
+
+- **`nops-org-roles.tf`** — Replaced by `org-iam.tf`.
+- **Project creation** — `google_project` resource and associated variables/outputs.
+- **Billing export project access** — `billing_export_project_id`, `nops_billing_export_role`, and `google_project_iam_member.nops_billing_export_viewer`.
+
 ## [1.0.5] - 2026-02-24
 
 ### Added

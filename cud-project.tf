@@ -1,120 +1,29 @@
-# New GCP project for nOps commitment management
-resource "google_project" "nops_project" {
-  name            = var.project_name
-  project_id      = var.project_id
-  org_id          = var.organization_id
-  billing_account = var.billing_account_id
-}
+# Project IAM (CUD Purchase Project)
 
-# Enable required APIs on the new project
-resource "google_project_service" "apis" {
-  for_each = toset(var.apis_to_enable)
-  project  = google_project.nops_project.project_id
-  service  = each.value
-
-  disable_dependent_services = false
-}
-
-# Grant nOps service account IAM roles on the new project (e.g. roles/compute.viewer, roles/cloudasset.viewer)
-resource "google_project_iam_member" "nops_sa_roles" {
-  for_each = toset(var.nops_project_roles)
-  project  = google_project.nops_project.project_id
-  role     = each.value
-  member   = "serviceAccount:${var.nops_service_account_email}"
-}
-
-# Grant the custom nOpsResourceManager role on the CUD project (compute.commitments.create for resource-based CUD purchasing)
-resource "google_project_iam_member" "nops_resource_manager_at_project" {
-  count = var.create_nops_resource_manager_role && var.grant_nops_resource_manager_role_at_project ? 1 : 0
-
-  project = google_project.nops_project.project_id
-  role    = google_organization_iam_custom_role.nops_resource_manager[0].id
-  member  = "serviceAccount:${var.nops_service_account_email}"
-}
-
-# nOps group: project-level access to view VMs and manage commitments manually (human managers)
-resource "google_project_iam_member" "nops_group_compute_viewer" {
-  count = var.grant_nops_group_project_compute_viewer ? 1 : 0
-
-  project = google_project.nops_project.project_id
+# Service account: Compute Viewer
+resource "google_project_iam_member" "nops_sa_compute_viewer" {
+  project = var.cud_purchase_project_id
   role    = "roles/compute.viewer"
-  member  = "group:${var.nops_group_email}"
-}
-
-resource "google_project_iam_member" "nops_group_resource_manager_at_project" {
-  count = var.create_nops_resource_manager_role && var.grant_nops_group_project_resource_manager ? 1 : 0
-
-  project = google_project.nops_project.project_id
-  role    = google_organization_iam_custom_role.nops_resource_manager[0].id
-  member  = "group:${var.nops_group_email}"
-}
-
-# Grant nOps SA billing.viewer on the billing account (project-level binding not supported by GCP)
-resource "google_billing_account_iam_member" "nops_billing_viewer" {
-  count              = var.grant_billing_viewer_on_billing_account ? 1 : 0
-  billing_account_id  = var.billing_account_id
-  role                = "roles/billing.viewer"
-  member              = "serviceAccount:${var.nops_service_account_email}"
-}
-
-# For spend-based (Flex) CUD purchasing
-resource "google_billing_account_iam_member" "nops_order_admin" {
-  count              = var.grant_nops_billing_order_admin ? 1 : 0
-  billing_account_id = var.billing_account_id
-  role               = "roles/consumerprocurement.orderAdmin"
-  member             = "serviceAccount:${var.nops_service_account_email}"
-}
-
-# For CUD recommendations and savings analysis
-resource "google_billing_account_iam_member" "nops_billing_cud_admin" {
-  count              = var.grant_nops_billing_cud_admin ? 1 : 0
-  billing_account_id = var.billing_account_id
-  role               = "roles/recommender.billingAccountCudAdmin"
-  member             = "serviceAccount:${var.nops_service_account_email}"
-}
-
-# Billing Account Administrator
-resource "google_billing_account_iam_member" "nops_billing_admin" {
-  count              = var.grant_nops_billing_admin ? 1 : 0
-  billing_account_id = var.billing_account_id
-  role               = "roles/billing.admin"
-  member             = "serviceAccount:${var.nops_service_account_email}"
-}
-
-# nOps group: billing and CUD visibility (human managers)
-resource "google_billing_account_iam_member" "nops_group_billing_viewer" {
-  count              = var.grant_nops_group_billing_viewer && var.nops_group_email != "" ? 1 : 0
-  billing_account_id = var.billing_account_id
-  role               = "roles/billing.viewer"
-  member             = "group:${var.nops_group_email}"
-}
-
-resource "google_billing_account_iam_member" "nops_group_billing_cud_viewer" {
-  count              = var.grant_nops_group_billing_cud_viewer && var.nops_group_email != "" ? 1 : 0
-  billing_account_id = var.billing_account_id
-  role               = "roles/recommender.billingAccountCudViewer"
-  member             = "group:${var.nops_group_email}"
-}
-
-# nOps group: orderAdmin for spend-based (Flex) CUD purchasing
-resource "google_billing_account_iam_member" "nops_group_order_admin" {
-  count              = var.grant_nops_group_order_admin && var.nops_group_email != "" ? 1 : 0
-  billing_account_id = var.billing_account_id
-  role               = "roles/consumerprocurement.orderAdmin"
-  member             = "group:${var.nops_group_email}"
-}
-
-# nOps group: Billing Account Administrator
-resource "google_billing_account_iam_member" "nops_group_billing_admin" {
-  count              = var.grant_nops_group_billing_admin && var.nops_group_email != "" ? 1 : 0
-  billing_account_id = var.billing_account_id
-  role               = "roles/billing.admin"
-  member             = "group:${var.nops_group_email}"
-}
-
-# Grant nOps SA read access to the billing export project (for exported billing/commitment data)
-resource "google_project_iam_member" "nops_billing_export_viewer" {
-  project = var.billing_export_project_id
-  role    = var.nops_billing_export_role
   member  = "serviceAccount:${var.nops_service_account_email}"
+}
+
+# Service account: nOps Resource Manager custom role
+resource "google_project_iam_member" "nops_sa_resource_manager_at_project" {
+  project = var.cud_purchase_project_id
+  role    = local.nops_resource_manager_role_name
+  member  = "serviceAccount:${var.nops_service_account_email}"
+}
+
+# nOps Support: Compute Viewer
+resource "google_project_iam_member" "nops_support_compute_viewer" {
+  project = var.cud_purchase_project_id
+  role    = "roles/compute.viewer"
+  member  = "group:${var.nops_support_email}"
+}
+
+# nOps Support: nOps Resource Manager custom role
+resource "google_project_iam_member" "nops_support_resource_manager_at_project" {
+  project = var.cud_purchase_project_id
+  role    = local.nops_resource_manager_role_name
+  member  = "group:${var.nops_support_email}"
 }

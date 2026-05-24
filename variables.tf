@@ -1,15 +1,10 @@
 variable "organization_id" {
-  description = "GCP Organization ID where the project will be created"
+  description = "GCP Organization ID used for organization-level IAM roles and the nOps Resource Manager custom role"
   type        = string
 }
 
 variable "billing_account_id" {
-  description = "Billing Account ID to associate with the new project (e.g. XXXXXX-XXXXXX-XXXXXX)"
-  type        = string
-}
-
-variable "billing_export_project_id" {
-  description = "Project ID of the existing Billing Export project used for nOps"
+  description = "Billing Account ID for billing account-level IAM grants (e.g. XXXXXX-XXXXXX-XXXXXX)"
   type        = string
 }
 
@@ -18,70 +13,15 @@ variable "nops_service_account_email" {
   type        = string
 }
 
-variable "project_id" {
-  description = "ID for the new GCP project (must be globally unique)"
+variable "cud_purchase_project_id" {
+  description = "Project ID of the existing CUD purchase GCP project where APIs are enabled and IAM roles are granted"
   type        = string
 }
 
-variable "project_name" {
-  description = "Display name for the new GCP project"
-  type        = string
-}
-
-variable "apis_to_enable" {
-  description = "List of APIs to enable on the new project"
-  type        = list(string)
-  default = [
-    "cloudbilling.googleapis.com",
-    "iam.googleapis.com",
-    "cloudresourcemanager.googleapis.com",
-    # APIs for commitment purchasing and CUD management
-    "compute.googleapis.com",
-    "cloudcommerceconsumerprocurement.googleapis.com",
-    "cloudasset.googleapis.com",
-    "cloudquotas.googleapis.com",
-    "serviceusage.googleapis.com",
-    "recommender.googleapis.com"
-  ]
-}
-
-variable "nops_project_roles" {
-  description = "IAM roles to grant the nOps service account on the new project. Note: roles/billing.viewer cannot be applied at project level; use billing account IAM instead (granted automatically when grant_billing_viewer is true)."
-  type        = list(string)
-  default = [
-    "roles/compute.viewer",
-    "roles/cloudasset.viewer"
-  ]
-}
-
-variable "grant_billing_viewer_on_billing_account" {
-  description = "Grant the nOps service account roles/billing.viewer on the billing account (required for billing/commitment visibility; this role cannot be granted at project level)."
+variable "disable_apis_on_destroy" {
+  description = "Whether to disable APIs when the Terraform resource is destroyed"
   type        = bool
-  default     = true
-}
-
-variable "grant_nops_billing_order_admin" {
-  description = "Grant the nOps service account roles/consumerprocurement.orderAdmin on the billing account (required for spend-based/Flex CUD purchasing)."
-  type        = bool
-  default     = true
-}
-
-variable "grant_nops_billing_cud_admin" {
-  description = "Grant the nOps service account roles/recommender.billingAccountCudAdmin on the billing account (for CUD recommendations and savings analysis)."
-  type        = bool
-  default     = true
-}
-
-variable "grant_nops_billing_admin" {
-  description = "Grant the nOps service account roles/billing.admin (Billing Account Administrator) on the billing account."
-  type        = bool
-  default     = true
-}
-
-variable "nops_billing_export_role" {
-  description = "IAM role to grant the nOps service account on the billing export project (for reading exported billing data). roles/billing.viewer is not valid on projects; use e.g. roles/viewer or roles/bigquery.dataViewer."
-  type        = string
-  default     = "roles/viewer"
+  default     = false
 }
 
 # ------------------------------------------------------------------------------
@@ -95,82 +35,27 @@ variable "create_nops_resource_manager_role" {
 }
 
 variable "nops_resource_manager_role_id" {
-  description = "ID for the custom organization role (e.g. nOpsResourceManager). Must be unique within the organization."
+  description = "ID for the nOps Resource Manager custom organization role (e.g. nOpsResourceManager). Used when granting the role and when create_nops_resource_manager_role is true."
   type        = string
-  default     = "nOpsResourceManager"
-}
-
-variable "grant_nops_resource_manager_role_at_org" {
-  description = "Grant the nOps Resource Manager custom role to the nOps service account at the organization level. Requires create_nops_resource_manager_role to be true."
-  type        = bool
-  default     = true
-}
-
-variable "grant_nops_resource_manager_role_at_project" {
-  description = "Grant the nOps Resource Manager custom role to the nOps service account on the dedicated CUD project (for resource-based commitment purchasing via compute.commitments.create). Requires create_nops_resource_manager_role to be true."
-  type        = bool
-  default     = true
 }
 
 # ------------------------------------------------------------------------------
-# Organization-level roles for Automation Agent (browser, support)
+# Organization-level IAM (optional)
 # ------------------------------------------------------------------------------
 
-variable "grant_nops_org_browser" {
-  description = "Grant the nOps service account roles/browser at the organization level (required for autonomous commitment management)."
-  type        = bool
-  default     = true
+variable "nops_support_email" {
+  description = "nOps Support group email (e.g. XXXXX-gcp-console@nops.io from the nOps UI). Used for organization, CUD project, and billing account IAM grants."
+  type        = string
 }
 
-variable "grant_nops_org_tech_support_editor" {
-  description = "Grant the nOps service account roles/cloudsupport.techSupportEditor at the organization level. Enable only if you have a paid support plan (Standard/Enhanced/Premium) and want support ticket creation."
+variable "grant_nops_sa_org_tech_support_editor" {
+  description = "Grant the nOps service account roles/cloudsupport.techSupportEditor at the organization level. Paid support plans only."
   type        = bool
   default     = false
 }
 
-variable "nops_group_email" {
-  description = "nOps group email (e.g. gcp-cm-XXXX@nops.io, from the nOps UI). Required for human manager access: billing/CUD visibility and optional org-level support role."
-  type        = string
-}
-
-variable "grant_nops_group_tech_support_editor" {
-  description = "Grant the nOps group (nops_group_email) roles/cloudsupport.techSupportEditor at the organization level. Paid support plans only."
+variable "grant_nops_support_org_tech_support_editor" {
+  description = "Grant the nOps Support group (nops_support_email) roles/cloudsupport.techSupportEditor at the organization level. Paid support plans only."
   type        = bool
   default     = false
-}
-
-variable "grant_nops_group_billing_viewer" {
-  description = "Grant the nOps group (nops_group_email) roles/billing.viewer on the billing account (required for human managers to view billing and CUD information)."
-  type        = bool
-  default     = true
-}
-
-variable "grant_nops_group_billing_cud_viewer" {
-  description = "Grant the nOps group (nops_group_email) roles/recommender.billingAccountCudViewer on the billing account (required for human managers to view CUD recommendations)."
-  type        = bool
-  default     = true
-}
-
-variable "grant_nops_group_order_admin" {
-  description = "Grant the nOps group (nops_group_email) roles/consumerprocurement.orderAdmin on the billing account (for spend-based/Flex CUD purchasing by human managers)."
-  type        = bool
-  default     = true
-}
-
-variable "grant_nops_group_billing_admin" {
-  description = "Grant the nOps group (nops_group_email) roles/billing.admin (Billing Account Administrator) on the billing account."
-  type        = bool
-  default     = true
-}
-
-variable "grant_nops_group_project_compute_viewer" {
-  description = "Grant the nOps group (nops_group_email) roles/compute.viewer on the CUD project (required for human managers to view VMs)."
-  type        = bool
-  default     = true
-}
-
-variable "grant_nops_group_project_resource_manager" {
-  description = "Grant the nOps group (nops_group_email) the custom nOpsResourceManager role on the CUD project (required for human managers to manage commitments manually). Requires create_nops_resource_manager_role to be true."
-  type        = bool
-  default     = true
 }
