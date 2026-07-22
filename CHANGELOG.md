@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.1.0] - 2026-07-22
+
+### Removed
+
+- **nOps Support nOps Resource Manager on CUD project** — Removed `google_project_iam_member.nops_support_resource_manager_at_project`; the nOps Support group is no longer granted the nOps Resource Manager custom role on the CUD purchase project. The service account still receives this role on the CUD project.
+
 ## [2.0.0] - 2026-05-23
 
 ### ⚠️ BREAKING CHANGES

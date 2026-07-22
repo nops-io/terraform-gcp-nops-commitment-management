@@ -20,10 +20,3 @@ resource "google_project_iam_member" "nops_support_compute_viewer" {
   role    = "roles/compute.viewer"
   member  = "group:${var.nops_support_email}"
 }
-
-# nOps Support: nOps Resource Manager custom role
-resource "google_project_iam_member" "nops_support_resource_manager_at_project" {
-  project = var.cud_purchase_project_id
-  role    = local.nops_resource_manager_role_name
-  member  = "group:${var.nops_support_email}"
-}

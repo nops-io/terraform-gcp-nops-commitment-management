@@ -60,7 +60,6 @@ The module grants the following roles on the CUD purchase project. Provide your 
 | Service account (`nops_service_account_email`) | Compute Viewer | `roles/compute.viewer` |
 | Service account (`nops_service_account_email`) | nOps Resource Manager | `organizations/<organization_id>/roles/<nops_resource_manager_role_id>` |
 | nOps Support (`nops_support_email`) | Compute Viewer | `roles/compute.viewer` |
-| nOps Support (`nops_support_email`) | nOps Resource Manager | `organizations/<organization_id>/roles/<nops_resource_manager_role_id>` |
 
 ### Billing Account IAM
 
@@ -105,7 +104,6 @@ All IAM roles listed in this module are always granted except `roles/cloudsuppor
 | **Organization** | `roles/compute.viewer` |
 | **Organization** | `roles/cloudsupport.techSupportEditor` (optional) |
 | **CUD project** | `roles/compute.viewer` |
-| **CUD project** | nOps Resource Manager (custom role) |
 | **Billing account** | `roles/billing.viewer` |
 | **Billing account** | `roles/consumerprocurement.orderAdmin` |
 | **Billing account** | `roles/recommender.billingAccountCudViewer` |
@@ -206,7 +204,7 @@ A full example with placeholders is in [`examples/basic/main.tf`](examples/basic
 
 **CUD Purchase Project IAM Granted (automatically, no configuration needed):**
 - Service account: `roles/compute.viewer`, nOps Resource Manager custom role
-- nOps Support: `roles/compute.viewer`, nOps Resource Manager custom role
+- nOps Support: `roles/compute.viewer`
 
 **Billing Account IAM Granted (automatically, no configuration needed):**
 - Service account: `roles/billing.viewer`, `roles/consumerprocurement.orderAdmin`, `roles/recommender.billingAccountCudAdmin`
