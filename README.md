@@ -71,7 +71,6 @@ The module grants the following roles on the billing account (`billing_account_i
 | Service account (`nops_service_account_email`) | Consumer Procurement Order Admin | `roles/consumerprocurement.orderAdmin` |
 | Service account (`nops_service_account_email`) | Recommender Billing Account CUD Admin | `roles/recommender.billingAccountCudAdmin` |
 | nOps Support (`nops_support_email`) | Billing Account Viewer | `roles/billing.viewer` |
-| nOps Support (`nops_support_email`) | Consumer Procurement Order Admin | `roles/consumerprocurement.orderAdmin` |
 | nOps Support (`nops_support_email`) | Recommender Billing Account CUD Viewer | `roles/recommender.billingAccountCudViewer` |
 
 ## Permissions by principal
@@ -105,7 +104,6 @@ All IAM roles listed in this module are always granted except `roles/cloudsuppor
 | **Organization** | `roles/cloudsupport.techSupportEditor` (optional) |
 | **CUD project** | `roles/compute.viewer` |
 | **Billing account** | `roles/billing.viewer` |
-| **Billing account** | `roles/consumerprocurement.orderAdmin` |
 | **Billing account** | `roles/recommender.billingAccountCudViewer` |
 
 #### Custom role: nOps Resource Manager
@@ -208,7 +206,7 @@ A full example with placeholders is in [`examples/basic/main.tf`](examples/basic
 
 **Billing Account IAM Granted (automatically, no configuration needed):**
 - Service account: `roles/billing.viewer`, `roles/consumerprocurement.orderAdmin`, `roles/recommender.billingAccountCudAdmin`
-- nOps Support: `roles/billing.viewer`, `roles/consumerprocurement.orderAdmin`, `roles/recommender.billingAccountCudViewer`
+- nOps Support: `roles/billing.viewer`, `roles/recommender.billingAccountCudViewer`
 
 **Optional IAM (disabled by default):**
 - Service account and nOps Support: `roles/cloudsupport.techSupportEditor` (paid support plans only)

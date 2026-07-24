@@ -28,13 +28,6 @@ resource "google_billing_account_iam_member" "nops_support_billing_viewer" {
   member             = "group:${var.nops_support_email}"
 }
 
-# nOps Support: Consumer Procurement Order Admin
-resource "google_billing_account_iam_member" "nops_support_order_admin" {
-  billing_account_id = var.billing_account_id
-  role               = "roles/consumerprocurement.orderAdmin"
-  member             = "group:${var.nops_support_email}"
-}
-
 # nOps Support: Recommender Billing Account CUD Viewer
 resource "google_billing_account_iam_member" "nops_support_billing_cud_viewer" {
   billing_account_id = var.billing_account_id

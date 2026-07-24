@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.2.0] - 2026-07-24
+
+### Removed
+
+- **nOps Support Consumer Procurement Order Admin on billing account** — Removed `google_billing_account_iam_member.nops_support_order_admin`; the nOps Support group is no longer granted `roles/consumerprocurement.orderAdmin` on the billing account. The service account still receives this role.
+
 ## [2.1.0] - 2026-07-22
 
 ### Removed
