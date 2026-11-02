@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.2.1] - 2026-11-02
+
+### Fixed
+
+- **nOps Resource Manager role missing reservation permissions** — Added `compute.reservations.create`, `compute.reservations.get`, and `compute.reservations.list` to `nOpsResourceManager`, aligning the role with the permissions the nOps Commitment Management **Check** validates. Previously the *Create Custom Role (Organization)* and *Project IAM* checks failed on `compute.reservations.create`. These permissions let nOps attach existing reservations when purchasing Local SSD / GPU commitments. Fixes #1.
+
 ## [2.2.0] - 2026-07-24
 
 ### Removed

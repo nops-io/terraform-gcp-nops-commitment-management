@@ -108,7 +108,7 @@ All IAM roles listed in this module are always granted except `roles/cloudsuppor
 
 #### Custom role: nOps Resource Manager
 
-The custom role **nOps Resource Manager** (`nOpsResourceManager`) includes the following permissions. It can be granted at the organization and/or on the CUD project (see variables).
+The custom role **nOps Resource Manager** (`nOpsResourceManager`) includes the following permissions. It can be granted at the organization and/or on the CUD project (see variables). This list matches the permissions the nOps Commitment Management **Check** validates for this role.
 
 | Category | Permission |
 |----------|------------|
@@ -121,6 +121,9 @@ The custom role **nOps Resource Manager** (`nOpsResourceManager`) includes the f
 | | `compute.commitments.update` |
 | | `compute.commitments.updateReservations` |
 | | `compute.regionOperations.get` |
+| **Compute (reservations)** | `compute.reservations.create` |
+| | `compute.reservations.get` |
+| | `compute.reservations.list` |
 | **Monitoring** | `monitoring.timeSeries.list` |
 | **Quotas (Service Usage)** | `serviceusage.quotas.get` |
 | | `serviceusage.quotas.update` |
